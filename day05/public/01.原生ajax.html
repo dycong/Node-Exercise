@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>原生ajax</title>
+</head>
+<body>
+<button id="btn">点击按钮发送ajax请求</button>
+
+
+<script>
+    document.getElementById('btn').onclick = function () {
+        /*
+        1、创建xhr对象
+        2、绑定事件监听
+           - xhr.onreadystatechange  会监听readyState值的变化，一旦发生变化，就会触发当前事件
+           readyState
+              0: xhr对象创建成功，但是xhr.open方法还未调用
+              1: open方法已经调用，但是还未调用xhr.send方法(意味着还没发送请求，还可以设置响应头)
+              2: send方法已经调用了，接收到了部分响应数据（响应首行，响应头）
+              3: 接受了响应体数据（如果响应体数据较小，或者纯文本，在此阶段全部接收）
+              4: 接收了全部的响应体数据
+        3、设置请求信息
+
+        4、发送请求
+           - xhr.send();
+         */
+        // 1、创建xhr对象
+        const xhr = new XMLHttpRequest();
+
+        // 2、绑定事件监听
+        xhr.onreadystatechange = function () {
+        //    处理接收响应内容
+            if(xhr.readyState === 2){
+                console.log(xhr.status);
+                console.log(xhr.getResponseHeader('content-type'));
+            }
+            if(xhr.readyState === 3){
+                console.log(xhr.responseText);
+            }
+            if(xhr.readyState ===4 && xhr.status === 200){
+                //响应成功
+                console.log(xhr.responseText); // 响应数据
+            }
+
+        }
+        // 3、设置请求信息 - 设置发送请求的地址、参数。。。
+        xhr.open('get','http://localhost:3000/ajax?username=jack&age=18');
+
+        // 4、发送请求
+        xhr.send();
+
+    }
+</script>
+</body>
+</html>

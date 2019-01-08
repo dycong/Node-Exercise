@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+  <meta charset="UTF-8">
+  <title>三级联动</title>
+</head>
+<body>
+
+<select id="province">
+  <option>请选择省份</option>
+</select> 省
+
+<select id="city">
+  <option>请选择市</option>
+</select> 市
+
+<select id="county">
+  <option>请选择区(县)</option>
+</select> 区(县)
+
+<script type="text/javascript" src="./js/jquery-1.12.4.js"></script>
+<script type="text/javascript">
+  // ready事件  $.onready = function () {}  相当于 DOMContentLoaded 事件  ，不是onload事件
+  // DOMContentLoaded 等待dom加载完毕是就调用，此时就能操作dom
+  // onload事件 等待页面所有资源（img js css mp4...）加载完毕才调用
+  $(function () {
+    const $province = $('#province');
+    const $city = $('#city');
+    const $county = $('#county');
+
+
+    // 先将所有省份请求
+    $.get('http://localhost:3000/province', function ({code, data}) {
+      if (code === 1) {
+        let html = '<option>请选择省份</option>';
+        data.forEach(item => {
+          html += (`<option value="${item.province}">${item.name}</option>`);
+        });
+        $province.html(html);
+        console.log()
+      } else {
+        alert(data);
+      }
+    });
+
+    // 监听元素值的变化，一旦变化，就会执行相应的回调函数
+    $province.change(function () {
+      // 清空区县的数据
+      $county.html('<option>请选择区(县)</option>')
+      //  获取当前选中的省份值
+      const province = this.value;
+      //  发送ajax请求
+      $.get('/city', {province}, function ({code, data}) {
+        if (code === 1) {
+          let html = '<option>请选择市</option>';
+          data.forEach(item => {
+            html += (`<option value="${item.city}">${item.name}</option>`);
+          });
+          $city.html(html);
+        } else {
+          alert(data);
+        }
+      });
+    });
+
+    $city.change(function () {
+      //  获取city的值
+      const city = this.value;
+      // 获取province的值
+      const province = $province.val();
+      //  发送ajax请求
+      $.get('/county', {province, city}, function ({code, data}) {
+        if (code === 1) {
+          let html = '<option>请选择区(县)</option>';
+          data.forEach(item => {
+            html += (`<option value="${item.county}">${item.name}</option>`);
+          });
+          $county.html(html);
+        } else {
+          alert(data);
+        }
+      });
+    })
+
+
+  })
+
+</script>
+</body>
+</html>

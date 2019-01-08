@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>登录页面</title>
+</head>
+<body>
+  <h1>用户登录页面</h1>
+  <!-- 
+    凡是涉及到用户的隐私就用post，其他用get
+   -->
+  <form action="http://localhost:3000/login" method="post">
+    用户名：<input type="text" name="username" > <br><br>
+    密码：<input type="password" name="pwd" > <br><br>
+    
+    <button type="submit">登录</button>
+  </form>
+</body>
+</html>
